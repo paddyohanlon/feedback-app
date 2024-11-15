@@ -1,15 +1,17 @@
 # A Simple Feedback App
 
+The backend expects MongoDB to be running locally on the default port ([Install MongoDB](https://www.mongodb.com/docs/manual/installation/)).
+
 Run the backend locally:
 
 ```bash
 npm start
 ```
 
-## API Endpoint Curls
+## API Endpoint Sample Curls
 
 ```bash
-curl http://localhost:8000/api/v1/feedback
+curl http://localhost:8000/api/v1/feedback | python -m json.tool
 ```
 
 ```bash
@@ -21,5 +23,5 @@ curl -X POST \
   "feedbackType": "bug",
   "message": "The home button is broken" 
 }' \
-http://localhost:8000/api/v1/feedback
+http://localhost:8000/api/v1/feedback | python -m json.tool
 ```

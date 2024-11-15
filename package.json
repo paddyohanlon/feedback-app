@@ -12,7 +12,8 @@
   "description": "",
   "dependencies": {
     "debug": "^4.3.7",
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "mongoose": "^8.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",
