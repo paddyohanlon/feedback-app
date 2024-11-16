@@ -52,8 +52,37 @@ const router = Router()
 router.get('/', async (req, res) => {
   debugApp('GET feedback')
 
+  // Pagination
+  let pageNumber = 1
+  let pageSize = 20
+  if (typeof req.query.pageNumber === 'string') {
+    pageNumber = parseInt(req.query.pageNumber)
+  }
+  if (typeof req.query.pageSize === 'string') {
+    pageSize = parseInt(req.query.pageSize)
+  }
+
+  // Filter by name (could also do `feedbackType`)
+  const filter: { name?: string } = {}
+  if (typeof req.query.name === 'string') {
+    filter.name = req.query.name
+  }
+
+  // Sort by newest first by default
+  const sort: { [key: string]: 1 | -1 } = { createdAt: -1 }
+  if (
+    typeof req.query.sortBy === 'string' &&
+    req.query.sortBy === 'createdAt' &&
+    typeof req.query.sortOrder === 'string' &&
+    req.query.sortOrder === 'asc'
+  ) {
+    sort['createdAt'] = 1
+  }
   try {
-    const docs = await FeedbackModel.find()
+    const docs = await FeedbackModel.find(filter)
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
+      .sort(sort)
     const feedbacks = docs.map((doc) => feedbackDocToApiResponse(doc))
 
     res.json(feedbacks)
