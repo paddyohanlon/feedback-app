@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import Joi from 'joi'
 import { debugApp } from '../utils/debugger'
 import { FeedbackType, type UnsavedFeedback, type Feedback } from '../types/common'
 
@@ -13,12 +14,17 @@ mongoose.connection.on('error', (err) => {
   debugApp(err)
 })
 
+// Validation constants
+const nameMaxLength = 50
+const emailMaxLength = 254
+const messageMaxLength = 2000
+
 const feedbackSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    feedbackType: { type: String, required: true },
-    message: { type: String, required: true }
+    name: { type: String, required: true, maxLength: nameMaxLength },
+    email: { type: String, required: true, maxLength: emailMaxLength },
+    feedbackType: { type: String, required: true, enum: Object.values(FeedbackType) },
+    message: { type: String, required: true, maxLength: messageMaxLength }
   },
   { timestamps: true }
 )
@@ -46,24 +52,55 @@ const router = Router()
 router.get('/', async (req, res) => {
   debugApp('GET feedback')
 
-  const docs = await FeedbackModel.find()
-  const feedbacks = docs.map((doc) => feedbackDocToApiResponse(doc))
+  try {
+    const docs = await FeedbackModel.find()
+    const feedbacks = docs.map((doc) => feedbackDocToApiResponse(doc))
 
-  res.json(feedbacks)
+    res.json(feedbacks)
+  } catch (err) {
+    debugApp('Error finding feedback', err)
+    res.status(500).json({ error: 'Internal server error' })
+  }
 })
 
 router.post('/', async (req, res) => {
   debugApp('POST feedback')
   debugApp('req.body', req.body)
-  const unsavedFeedback = req.body as UnsavedFeedback
 
-  // validate
+  const schema = Joi.object({
+    name: Joi.string().max(nameMaxLength).required(),
+    email: Joi.string().email().required(),
+    feedbackType: Joi.string()
+      .valid(...Object.values(FeedbackType))
+      .required(),
+    message: Joi.string().max(messageMaxLength).required()
+  })
+
+  const { value, error } = schema.validate(req.body, { abortEarly: false })
+  if (error) {
+    debugApp(error.details)
+    res.status(400).json({ error: error.details.map((d) => d.message).join('. ') })
+    return
+  }
+
+  const unsavedFeedback = value as UnsavedFeedback
 
   const feedbackModel = new FeedbackModel(unsavedFeedback)
-  const doc = await feedbackModel.save()
-  const savedFeedback = feedbackDocToApiResponse(doc)
 
-  res.json(savedFeedback)
+  try {
+    const doc = await feedbackModel.save()
+    const savedFeedback = feedbackDocToApiResponse(doc)
+
+    res.json(savedFeedback)
+  } catch (err) {
+    if (err instanceof mongoose.Error.ValidationError) {
+      res.status(400).json({ error: err.message })
+      return
+    }
+
+    debugApp('Error saving feedback', err)
+    res.status(500).json({ error: 'Internal server error' })
+  }
 })
 
 export default router
