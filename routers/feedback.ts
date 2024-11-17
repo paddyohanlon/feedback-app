@@ -42,37 +42,56 @@ const router = Router()
 router.get('/', async (req, res) => {
   debugApp('GET feedback')
 
-  // Pagination
-  let pageNumber = 1
-  let pageSize = 20
-  if (typeof req.query.pageNumber === 'string') {
-    pageNumber = parseInt(req.query.pageNumber)
+  const queryParamsSchema = Joi.object({
+    name: Joi.string().max(nameMaxLength),
+    pageNumber: Joi.number().integer().min(1),
+    pageSize: Joi.number().integer().min(1),
+    sortBy: Joi.string().valid('createdAt'),
+    sortOrder: Joi.string().valid('asc', 'desc')
+  })
+
+  const { value, error } = queryParamsSchema.validate(req.query, { abortEarly: false })
+  if (error) {
+    debugApp(error.details)
+    res.status(400).json({ error: error.details.map((d) => d.message).join('. ') })
+    return
   }
-  if (typeof req.query.pageSize === 'string') {
-    pageSize = parseInt(req.query.pageSize)
+
+  type QueryParams = {
+    name: string
+    pageNumber: number
+    pageSize: number
+    sortBy: string
+    sortOrder: string
   }
+
+  const { name, pageNumber, pageSize, sortBy, sortOrder } = value as QueryParams
 
   // Filter by name (could also do `feedbackType`)
   const filter: { name?: string } = {}
-  if (typeof req.query.name === 'string') {
-    filter.name = req.query.name
+  if (name) {
+    filter.name = name
   }
 
-  // Sort by newest first by default
-  const sort: { [key: string]: 1 | -1 } = { createdAt: -1 }
-  if (
-    typeof req.query.sortBy === 'string' &&
-    req.query.sortBy === 'createdAt' &&
-    typeof req.query.sortOrder === 'string' &&
-    req.query.sortOrder === 'asc'
-  ) {
-    sort['createdAt'] = 1
+  const feedbackQuery = FeedbackModel.find()
+
+  // Pagination
+  if (pageNumber && pageSize) {
+    feedbackQuery.skip((pageNumber - 1) * pageSize).limit(pageSize)
   }
+
+  // Sorting
+  const sort: { [key: string]: 1 | -1 } = {}
+  if (sortBy && sortOrder) {
+    sort[sortBy] = sortOrder === 'asc' ? 1 : -1
+  } else {
+    // Sort by newest first by default
+    sort['createdAt'] = -1
+  }
+  feedbackQuery.sort(sort)
+
   try {
-    const docs = await FeedbackModel.find(filter)
-      .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize)
-      .sort(sort)
+    const docs = await feedbackQuery
     const feedbacks = docs.map((doc) => feedbackDocToApiResponse(doc))
 
     res.json(feedbacks)
