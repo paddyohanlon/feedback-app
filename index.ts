@@ -20,4 +20,12 @@ app.use('/api/v1', apiRouter)
 app.use(errorHandler)
 
 const port = config.get('PORT')
-app.listen(port, () => debugApp(`Server started on ${port}`))
+
+export function startServer() {
+  return app.listen(port, () => debugApp(`Server started on ${port}`))
+}
+
+// Only start the server when this file is run, not when the server is imported for testing
+if (require.main === module) {
+  startServer()
+}
