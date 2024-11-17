@@ -1,25 +1,10 @@
 import { Router } from 'express'
 import Joi from 'joi'
+import config from 'config'
 import { debugApp } from '../utils/debugger'
 import { FeedbackType, type UnsavedFeedback, type Feedback } from '../types/common'
 import mongoose from 'mongoose'
-
-// Validation constants
-const nameMaxLength = 50
-const emailMaxLength = 254
-const messageMaxLength = 2000
-
-const feedbackSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true, maxLength: nameMaxLength },
-    email: { type: String, required: true, maxLength: emailMaxLength },
-    feedbackType: { type: String, required: true, enum: Object.values(FeedbackType) },
-    message: { type: String, required: true, maxLength: messageMaxLength }
-  },
-  { timestamps: true }
-)
-
-const FeedbackModel = mongoose.model('Feedback', feedbackSchema)
+import { FeedbackModel } from '../models/feedback'
 
 /**
  * Return only the data the client needs
@@ -43,7 +28,7 @@ router.get('/', async (req, res) => {
   debugApp('GET feedback')
 
   const queryParamsSchema = Joi.object({
-    name: Joi.string().max(nameMaxLength),
+    name: Joi.string().max(config.get('NAME_MAX_LENGTH')),
     pageNumber: Joi.number().integer().min(1),
     pageSize: Joi.number().integer().min(1),
     sortBy: Joi.string().valid('createdAt'),
@@ -106,12 +91,12 @@ router.post('/', async (req, res) => {
   debugApp('req.body', req.body)
 
   const schema = Joi.object({
-    name: Joi.string().max(nameMaxLength).required(),
+    name: Joi.string().max(config.get('NAME_MAX_LENGTH')).required(),
     email: Joi.string().email().required(),
     feedbackType: Joi.string()
       .valid(...Object.values(FeedbackType))
       .required(),
-    message: Joi.string().max(messageMaxLength).required()
+    message: Joi.string().max(config.get('MESSAGE_MAX_LENGTH')).required()
   })
 
   const { value, error } = schema.validate(req.body, { abortEarly: false })
