@@ -2,6 +2,12 @@
 
 The backend expects MongoDB to be running locally on the default port ([Install MongoDB](https://www.mongodb.com/docs/manual/installation/)).
 
+Seed sample data:
+
+```bash
+npm run seed
+```
+
 Run the backend locally:
 
 ```bash
