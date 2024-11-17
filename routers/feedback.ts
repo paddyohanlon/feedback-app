@@ -100,6 +100,7 @@ router.post('/', async (req, res) => {
   })
 
   const { value, error } = schema.validate(req.body, { abortEarly: false })
+  // would eventually extract this to avoid duplication
   if (error) {
     debugApp(error.details)
     res.status(400).json({ error: error.details.map((d) => d.message).join('. ') })
