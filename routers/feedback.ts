@@ -58,7 +58,7 @@ router.get('/', async (req, res) => {
     filter.name = name
   }
 
-  const feedbackQuery = FeedbackModel.find()
+  const feedbackQuery = FeedbackModel.find(filter)
 
   // Pagination
   if (pageNumber && pageSize) {
@@ -114,7 +114,7 @@ router.post('/', async (req, res) => {
     const doc = await feedbackModel.save()
     const savedFeedback = feedbackDocToApiResponse(doc)
 
-    res.json(savedFeedback)
+    res.status(201).json(savedFeedback)
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
       res.status(400).json({ error: err.message })
