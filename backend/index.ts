@@ -10,6 +10,8 @@ const app = express()
 // Eventually would probably use: helmet, cors
 // If the API is public, consider abuse (DDOS and spam...)
 
+app.use(express.static('../frontend/dist'))
+
 db()
 
 debugApp(process.env.NODE_ENV)

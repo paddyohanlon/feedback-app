@@ -8,11 +8,33 @@ Seed sample data:
 npm run seed
 ```
 
-Run the backend locally:
+Install frontend and backend dependencies:
 
 ```bash
-npm start
+npm run install-all
 ```
+
+Build the frontend:
+
+```bash
+npm run build
+```
+
+Run the backend:
+
+```bash
+npm run backend
+```
+
+Then, view the built frontend at <http://localhost:8000>
+
+Or, run the frontend and backend concurrently:
+
+```bash
+npm run dev
+```
+
+The backend will run on `http://localhost:8000`. The frontend will run on `http://localhost:5173/` (if `5173` is available, check the command output to double-check the port)
 
 ## API Endpoint Sample Curls
 
