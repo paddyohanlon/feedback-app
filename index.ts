@@ -7,6 +7,9 @@ import db from './db'
 
 const app = express()
 
+// Eventually would probably use: helmet, cors
+// If the API is public, consider abuse (DDOS and spam...)
+
 db()
 
 debugApp(process.env.NODE_ENV)
