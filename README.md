@@ -48,7 +48,7 @@ curl -X POST \
 -d '{
   "name": "Ronald",
   "email": "me@example.com",
-  "feedbackType": "bug",
+  "type": "bug",
   "message": "The home button is broken" 
 }' \
 http://localhost:8000/api/v1/feedback | python -m json.tool

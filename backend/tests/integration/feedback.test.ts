@@ -15,25 +15,25 @@ describe('/api/v1/feedback', () => {
     const feedbackA: UnsavedFeedback = {
       name: 'Jo',
       email: 'jo@example.com',
-      feedbackType: FeedbackType.BUG,
+      type: FeedbackType.BUG,
       message: 'I am unable to find anything on this website...'
     }
     const feedbackB: UnsavedFeedback = {
       name: 'Nicola',
       email: 'nico@example.com',
-      feedbackType: FeedbackType.SUGGESTION,
+      type: FeedbackType.SUGGESTION,
       message: 'The buy now button is broken'
     }
     const feedbackC: UnsavedFeedback = {
       name: 'Angel',
       email: 'angel@example.com',
-      feedbackType: FeedbackType.BUG,
+      type: FeedbackType.BUG,
       message: 'Contact form submission does not work for me'
     }
     const feedbackD: UnsavedFeedback = {
       name: 'Angel',
       email: 'angel@example.com',
-      feedbackType: FeedbackType.SUGGESTION,
+      type: FeedbackType.SUGGESTION,
       message: 'Why not just fix your app?'
     }
     // Add individually so `createdAt` is different to test sort by date
@@ -159,7 +159,7 @@ describe('/api/v1/feedback', () => {
       const res = await request(server).post('/api/v1/feedback').send({
         name: nameOneCharTooLong,
         email: 'michelle@example.com',
-        feedbackType: FeedbackType.SUGGESTION,
+        type: FeedbackType.SUGGESTION,
         message: 'How about making the website yellow?'
       })
 
@@ -169,7 +169,7 @@ describe('/api/v1/feedback', () => {
       const res = await request(server).post('/api/v1/feedback').send({
         name: 'Michelle',
         email: 'lemons',
-        feedbackType: FeedbackType.SUGGESTION,
+        type: FeedbackType.SUGGESTION,
         message: 'How about making the website yellow?'
       })
 
@@ -179,7 +179,7 @@ describe('/api/v1/feedback', () => {
       const res = await request(server).post('/api/v1/feedback').send({
         name: 'Michelle',
         email: 'michelle@example.com',
-        feedbackType: 'tree',
+        type: 'tree',
         message: 'How about making the website yellow?'
       })
 
@@ -191,7 +191,7 @@ describe('/api/v1/feedback', () => {
       const res = await request(server).post('/api/v1/feedback').send({
         name: 'Michelle',
         email: 'michelle@example.com',
-        feedbackType: FeedbackType.SUGGESTION,
+        type: FeedbackType.SUGGESTION,
         message: messageOneCharTooLong
       })
 
@@ -206,7 +206,7 @@ describe('/api/v1/feedback', () => {
       const res = await request(server).post('/api/v1/feedback').send({
         name: 'Michelle',
         email: 'michelle@example.com',
-        feedbackType: FeedbackType.SUGGESTION,
+        type: FeedbackType.SUGGESTION,
         message: 'How about making the website yellow?'
       })
 

@@ -6,7 +6,7 @@ const feedbackSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, maxLength: config.get('NAME_MAX_LENGTH') },
     email: { type: String, required: true, maxLength: config.get('EMAIL_MAX_LENGTH') },
-    feedbackType: { type: String, required: true, enum: Object.values(FeedbackType) },
+    type: { type: String, required: true, enum: Object.values(FeedbackType) },
     message: { type: String, required: true, maxLength: config.get('MESSAGE_MAX_LENGTH') }
   },
   { timestamps: true }

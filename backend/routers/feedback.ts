@@ -10,14 +10,14 @@ import { FeedbackModel } from '../models/feedback'
  * Return only the data the client needs
  */
 function feedbackDocToApiResponse(doc: InstanceType<typeof FeedbackModel>): Feedback {
-  const { id, createdAt, name, email, feedbackType, message } = doc
+  const { id, createdAt, name, email, type, message } = doc
 
   return {
     id,
     createdAt,
     name,
     email,
-    feedbackType: feedbackType as FeedbackType,
+    type: type as FeedbackType,
     message
   }
 }
@@ -52,7 +52,7 @@ router.get('/', async (req, res) => {
 
   const { name, pageNumber, pageSize, sortBy, sortOrder } = value as QueryParams
 
-  // Filter by name (could also do `feedbackType`)
+  // Filter by name (could also do `type`)
   const filter: { name?: string } = {}
   if (name) {
     filter.name = name
@@ -93,7 +93,7 @@ router.post('/', async (req, res) => {
   const schema = Joi.object({
     name: Joi.string().max(config.get('NAME_MAX_LENGTH')).required(),
     email: Joi.string().email().required(),
-    feedbackType: Joi.string()
+    type: Joi.string()
       .valid(...Object.values(FeedbackType))
       .required(),
     message: Joi.string().max(config.get('MESSAGE_MAX_LENGTH')).required()
