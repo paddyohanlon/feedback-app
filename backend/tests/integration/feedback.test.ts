@@ -16,24 +16,28 @@ describe('/api/v1/feedback', () => {
       name: 'Jo',
       email: 'jo@example.com',
       type: FeedbackType.BUG,
+      title: 'No content',
       message: 'I am unable to find anything on this website...'
     }
     const feedbackB: UnsavedFeedback = {
       name: 'Nicola',
       email: 'nico@example.com',
       type: FeedbackType.SUGGESTION,
+      title: 'Broken button',
       message: 'The buy now button is broken'
     }
     const feedbackC: UnsavedFeedback = {
       name: 'Angel',
       email: 'angel@example.com',
       type: FeedbackType.BUG,
+      title: 'Submission failing',
       message: 'Contact form submission does not work for me'
     }
     const feedbackD: UnsavedFeedback = {
       name: 'Angel',
       email: 'angel@example.com',
       type: FeedbackType.SUGGESTION,
+      title: 'App broken',
       message: 'Why not just fix your app?'
     }
     // Add individually so `createdAt` is different to test sort by date
@@ -46,7 +50,7 @@ describe('/api/v1/feedback', () => {
   afterEach(async () => {
     server.close()
     await FeedbackModel.deleteMany()
-    mongoose.connection.close()
+    await mongoose.connection.close()
   })
 
   describe('GET /', () => {
@@ -118,8 +122,6 @@ describe('/api/v1/feedback', () => {
 
       const body = res.body as Feedback[]
 
-      console.log('body', body)
-
       expect(res.status).toBe(200)
       expect(body.length).toBe(2)
       expect(body[0].name).toBe('Nicola')
@@ -183,6 +185,18 @@ describe('/api/v1/feedback', () => {
 
       expect(res.status).toBe(400)
     })
+    it('should return 400 if title is too long', async () => {
+      const titleOneCharTooLong = new Array(TITLE_MAX_LENGTH + 2).join('a')
+      const res = await request(server).post('/api/v1/feedback').send({
+        name: 'Michelle',
+        email: 'michelle@example.com',
+        type: FeedbackType.SUGGESTION,
+        title: titleOneCharTooLong,
+        message: 'Make the site red'
+      })
+
+      expect(res.status).toBe(400)
+    })
     it('should return 400 if message is too long', async () => {
       const messageOneCharTooLong = new Array(MESSAGE_MAX_LENGTH + 2).join('a')
       const res = await request(server).post('/api/v1/feedback').send({
@@ -204,6 +218,7 @@ describe('/api/v1/feedback', () => {
         name: 'Michelle',
         email: 'michelle@example.com',
         type: FeedbackType.SUGGESTION,
+        title: 'Make site yellow',
         message: 'How about making the website yellow?'
       })
 
