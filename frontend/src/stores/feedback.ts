@@ -36,7 +36,7 @@ export const useFeedbackStore = defineStore('feedback', () => {
   const queryParams = ref<QueryParams>({
     sortBy: 'createdAt',
     sortOrder: 'desc',
-    pageSize: 5,
+    pageSize: 10,
     pageNumber: 1,
   })
 
