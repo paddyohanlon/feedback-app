@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { FeedbackType } from '../types/common'
+import { FeedbackType } from '../../types/common'
 import { NAME_MAX_LENGTH, EMAIL_MAX_LENGTH, TITLE_MAX_LENGTH, MESSAGE_MAX_LENGTH } from '../../constants'
 
 const feedbackSchema = new mongoose.Schema(

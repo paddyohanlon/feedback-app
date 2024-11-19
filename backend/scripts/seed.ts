@@ -1,7 +1,7 @@
 // src/scripts/seed.ts
 import db from '../db'
 import { FeedbackModel } from '../models/feedback'
-import { FeedbackType, type UnsavedFeedback } from '../types/common'
+import { FeedbackType, type UnsavedFeedback } from '../../types/common'
 import mongoose from 'mongoose'
 
 const sampleFeedback: UnsavedFeedback[] = [

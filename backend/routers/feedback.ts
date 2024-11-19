@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import Joi from 'joi'
 import { debugApp } from '../utils/debugger'
-import { FeedbackType, type UnsavedFeedback, type Feedback } from '../types/common'
+import { FeedbackType, type UnsavedFeedback, type Feedback } from '../../types/common'
 import { NAME_MAX_LENGTH, TITLE_MAX_LENGTH, MESSAGE_MAX_LENGTH } from '../../constants'
 import mongoose from 'mongoose'
 import { FeedbackModel } from '../models/feedback'
