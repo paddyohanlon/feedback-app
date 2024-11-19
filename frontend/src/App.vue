@@ -37,26 +37,49 @@ const pageNumber = computed(() =>
   queryParams.value.pageNumber === undefined ? 1 : queryParams.value.pageNumber,
 )
 
+const pageSize = computed(() =>
+  queryParams.value.pageSize === undefined ? 20 : queryParams.value.pageSize,
+)
+
 /**
  * When paginating, always show the first and last page buttons.
  * And show siblings to the left and right of current page number.
  * I'm sure this could be tidied up
+ * TODO I should test this!
  */
 const siblingPageNumArray = computed(() => {
-  const pagesToShow = 4
-  const distance = Math.floor(pagesToShow / 2)
-  let startPage = 2
+  /** Count the first, current and last page buttons */
+  const firstCurrentLast = 3
 
-  if (pageNumber.value > distance + 1 && pageNumber.value < totalPages.value - pagesToShow) {
-    startPage = pageNumber.value - distance
-  } else if (pageNumber.value >= totalPages.value - pagesToShow) {
-    startPage = totalPages.value - pagesToShow - 1
+  /** Half to be shown on each side of current page */
+  const siblingsToShow = 4
+
+  const sideSiblings = Math.floor(siblingsToShow / 2)
+
+  let startPage
+  let endPage
+
+  if (totalPages.value <= 2) return []
+
+  // If there aren't enough pages to need ellipsis
+  if (totalPages.value <= siblingsToShow + firstCurrentLast) {
+    startPage = 2
+    endPage = totalPages.value - 1
   }
-
-  let endPage = totalPages.value - 1
-
-  if (pageNumber.value < totalPages.value - (distance + 1)) {
-    endPage = startPage + pagesToShow
+  // If we're near the start
+  else if (pageNumber.value <= sideSiblings + 2) {
+    startPage = 2
+    endPage = 2 + siblingsToShow
+  }
+  // If we're near the end
+  else if (pageNumber.value >= totalPages.value - (sideSiblings + 1)) {
+    startPage = totalPages.value - siblingsToShow - 1
+    endPage = totalPages.value - 1
+  }
+  // If we're in the middle
+  else {
+    startPage = pageNumber.value - sideSiblings
+    endPage = pageNumber.value + sideSiblings
   }
 
   const siblingPageNums = []
@@ -77,7 +100,7 @@ function handleSortChange(event: Event) {
   // would be nice to show some kind of loading indicator for the list of feedback
   const select = event.target as HTMLSelectElement
   sortOrder.value = select.value as SortOrder
-  feedbackStore.setQueryParams({ sortOrder: sortOrder.value })
+  feedbackStore.setQueryParams({ sortOrder: sortOrder.value, pageNumber: 1 })
 }
 
 const nameFilter = ref('')
@@ -85,7 +108,7 @@ const nameFilter = ref('')
 function handleNameFilterChange(event: Event) {
   const select = event.target as HTMLSelectElement
   nameFilter.value = select.value
-  feedbackStore.setQueryParams({ name: nameFilter.value })
+  feedbackStore.setQueryParams({ name: nameFilter.value, pageNumber: 1 })
 }
 
 function handlePagination(pageNum: number) {
@@ -172,7 +195,10 @@ function handlePagination(pageNum: number) {
         </div>
         <div class="p-4 border-t border-slate-200">
           <!-- Pagination accessibility needs work probably -->
-          <ul class="flex flex-wrap content-stretch items-center text-sm font-bold">
+          <ul
+            v-if="totalFeedbackDocs > pageSize"
+            class="flex flex-wrap content-stretch items-center text-sm font-bold"
+          >
             <li v-if="pageNumber > 1">
               <PaginationButton :isFirst="true" @click="handlePagination(pageNumber - 1)">
                 <LeftArrowSvg />
@@ -189,7 +215,7 @@ function handlePagination(pageNum: number) {
               </PaginationButton>
             </li>
             <PaginationEllipsis v-if="siblingPageNumArray[0] > 2" />
-            <li v-for="(pageNum, index) in siblingPageNumArray" class="grow">
+            <li v-for="pageNum in siblingPageNumArray" class="grow">
               <PaginationButton
                 @click="handlePagination(pageNum)"
                 :isActive="pageNum === pageNumber"
