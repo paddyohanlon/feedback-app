@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import Joi from 'joi'
 import { debugApp } from '../utils/debugger'
-import { FeedbackType, type UnsavedFeedback, type Feedback, type QueryParams } from '../../types/common'
+import { FeedbackType, type UnsavedFeedback, type Feedback, type QueryParams, FeedbacksDto } from '../../types/common'
 import { NAME_MAX_LENGTH, TITLE_MAX_LENGTH, MESSAGE_MAX_LENGTH } from '../../constants'
 import mongoose from 'mongoose'
 import { FeedbackModel } from '../models/feedback'
@@ -70,10 +70,13 @@ router.get('/', async (req, res) => {
   feedbackQuery.sort(sort)
 
   try {
+    const totalDocs = await FeedbackModel.countDocuments(filter)
     const docs = await feedbackQuery
     const feedbacks = docs.map((doc) => feedbackDocToApiResponse(doc))
 
-    res.json(feedbacks)
+    const feedbacksDto: FeedbacksDto = { feedbacks, totalDocs }
+
+    res.json(feedbacksDto)
   } catch (err) {
     debugApp('Error finding feedback', err)
     res.status(500).json({ error: 'Internal server error' })

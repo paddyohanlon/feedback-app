@@ -2,7 +2,7 @@ import request from 'supertest'
 import { startServer } from '../../index'
 import { Server } from 'net'
 import { FeedbackModel } from '../../models/feedback'
-import { Feedback, FeedbackType, type UnsavedFeedback } from '../../../types/common'
+import { FeedbacksDto, FeedbackType, type UnsavedFeedback } from '../../../types/common'
 import { NAME_MAX_LENGTH, TITLE_MAX_LENGTH, MESSAGE_MAX_LENGTH } from '../../../constants'
 import mongoose from 'mongoose'
 import db from '../../db'
@@ -56,15 +56,15 @@ describe('/api/v1/feedback', () => {
   describe('GET /', () => {
     it('should return all feedback with default sorting', async () => {
       const res = await request(server).get('/api/v1/feedback')
-      const body = res.body as Feedback[]
+      const { feedbacks } = res.body as FeedbacksDto
 
       expect(res.status).toBe(200)
-      expect(body.length).toBe(4)
+      expect(feedbacks.length).toBe(4)
       // Test default `createdAt` desc sorting
-      expect(body[0].name === 'Angel').toBeTruthy()
-      expect(body[1].name === 'Angel').toBeTruthy()
-      expect(body[2].name === 'Nicola').toBeTruthy()
-      expect(body[3].name === 'Jo').toBeTruthy()
+      expect(feedbacks[0].name === 'Angel').toBeTruthy()
+      expect(feedbacks[1].name === 'Angel').toBeTruthy()
+      expect(feedbacks[2].name === 'Nicola').toBeTruthy()
+      expect(feedbacks[3].name === 'Jo').toBeTruthy()
     })
 
     it('should return 400 if `name` query param is invalid', async () => {
@@ -91,60 +91,60 @@ describe('/api/v1/feedback', () => {
 
     it('should return all feedback sorted by date ASC', async () => {
       const res = await request(server).get('/api/v1/feedback?sortBy=createdAt&sortOrder=asc')
-      const body = res.body as Feedback[]
+      const { feedbacks } = res.body as FeedbacksDto
 
       expect(res.status).toBe(200)
-      expect(body[0].name === 'Jo').toBeTruthy()
-      expect(body[1].name === 'Nicola').toBeTruthy()
-      expect(body[2].name === 'Angel').toBeTruthy()
-      expect(body[3].name === 'Angel').toBeTruthy()
+      expect(feedbacks[0].name === 'Jo').toBeTruthy()
+      expect(feedbacks[1].name === 'Nicola').toBeTruthy()
+      expect(feedbacks[2].name === 'Angel').toBeTruthy()
+      expect(feedbacks[3].name === 'Angel').toBeTruthy()
     })
     it('should return all feedback sorted by date DESC', async () => {
       const res = await request(server).get('/api/v1/feedback?sortBy=createdAt&sortOrder=desc')
-      const body = res.body as Feedback[]
+      const { feedbacks } = res.body as FeedbacksDto
 
       expect(res.status).toBe(200)
-      expect(body[3].name === 'Jo').toBeTruthy()
-      expect(body[2].name === 'Nicola').toBeTruthy()
-      expect(body[1].name === 'Angel').toBeTruthy()
-      expect(body[0].name === 'Angel').toBeTruthy()
+      expect(feedbacks[3].name === 'Jo').toBeTruthy()
+      expect(feedbacks[2].name === 'Nicola').toBeTruthy()
+      expect(feedbacks[1].name === 'Angel').toBeTruthy()
+      expect(feedbacks[0].name === 'Angel').toBeTruthy()
     })
 
     it('should return posts filtered by name', async () => {
       const res = await request(server).get('/api/v1/feedback?name=Angel')
+      const { feedbacks } = res.body as FeedbacksDto
 
       expect(res.status).toBe(200)
-      expect(res.body.length).toBe(2)
+      expect(feedbacks.length).toBe(2)
     })
 
     it('should return paginated feedback', async () => {
       const res = await request(server).get('/api/v1/feedback?pageSize=2&pageNumber=2')
-
-      const body = res.body as Feedback[]
+      const { feedbacks } = res.body as FeedbacksDto
 
       expect(res.status).toBe(200)
-      expect(body.length).toBe(2)
-      expect(body[0].name).toBe('Nicola')
-      expect(body[1].name).toBe('Jo')
+      expect(feedbacks.length).toBe(2)
+      expect(feedbacks[0].name).toBe('Nicola')
+      expect(feedbacks[1].name).toBe('Jo')
     })
 
     it('should handle multiple query parameters together', async () => {
       const res = await request(server).get(
         '/api/v1/feedback?name=Angel&pageSize=1&pageNumber=1&sortBy=createdAt&sortOrder=asc'
       )
-      const body = res.body as Feedback[]
+      const { feedbacks } = res.body as FeedbacksDto
 
       expect(res.status).toBe(200)
-      expect(body).toHaveLength(1)
-      expect(body[0].name).toBe('Angel')
+      expect(feedbacks).toHaveLength(1)
+      expect(feedbacks[0].name).toBe('Angel')
     })
 
     it('should allow empty query parameters', async () => {
       const res = await request(server).get('/api/v1/feedback?name=&pageSize=&pageNumber=&sortBy=&sortOrder=')
-      const body = res.body as Feedback[]
+      const { feedbacks } = res.body as FeedbacksDto
 
       expect(res.status).toBe(200)
-      expect(body).toHaveLength(4)
+      expect(feedbacks).toHaveLength(4)
     })
 
     // Test error handling

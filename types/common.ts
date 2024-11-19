@@ -15,6 +15,11 @@ export type Feedback = {
 
 export type UnsavedFeedback = Omit<Feedback, "id" | "createdAt">;
 
+export type FeedbacksDto = {
+  feedbacks: Feedback[];
+  totalDocs: number;
+};
+
 export type QueryParams = {
   name?: string;
   pageNumber?: number;
