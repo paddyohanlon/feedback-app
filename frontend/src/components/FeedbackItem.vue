@@ -29,7 +29,9 @@ function handleItemClick() {
       </h3>
       <div class="flex gap-2 justify-between text-sm text-slate-500">
         <div aria-label="Reporter name">{{ feedback.name }}</div>
-        <div aria-label="Reported time">{{ getRelativeTimeString(feedback.createdAt) }}</div>
+        <div class="shrink-0" aria-label="Reported time">
+          {{ getRelativeTimeString(feedback.createdAt) }}
+        </div>
       </div>
     </div>
   </li>
