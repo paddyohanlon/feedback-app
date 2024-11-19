@@ -16,9 +16,9 @@ export type Feedback = {
 export type UnsavedFeedback = Omit<Feedback, "id" | "createdAt">;
 
 export type QueryParams = {
-  name: string;
-  pageNumber: number;
-  pageSize: number;
-  sortBy: string;
-  sortOrder: string;
+  name?: string;
+  pageNumber?: number;
+  pageSize?: number;
+  sortBy?: string;
+  sortOrder?: string;
 };
