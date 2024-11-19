@@ -14,7 +14,7 @@ defineProps<{
   <Field
     :name="name"
     as="select"
-    class="border border-slate-200 px-3 py-1 rounded min-w-[300px] appearance-none select-caret"
+    class="border border-slate-200 px-3 py-1 rounded max-sm:w-full sm:min-w-[300px] appearance-none select-caret"
     v-model="model"
   >
     <option v-if="defaultOption" disabled value="">{{ defaultOption }}</option>

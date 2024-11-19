@@ -16,7 +16,7 @@ defineProps<{
     :type="type"
     v-model="model"
     class="border border-slate-200 px-3 py-1 rounded"
-    :class="isFullWidth ? 'w-full' : 'min-w-[300px]'"
+    :class="isFullWidth ? 'w-full' : 'max-sm:w-full sm:min-w-[300px]'"
     required
   />
 </template>

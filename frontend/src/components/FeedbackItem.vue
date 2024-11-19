@@ -5,9 +5,16 @@ import BugIconSvg from '@/components/BugIconSvg.vue'
 import SuggestionIconSvg from '@/components/SuggestionIconSvg.vue'
 import { useFeedbackStore } from '@/stores/feedback'
 
+const emit = defineEmits(['selectItem'])
+
 const { feedback, isActive = false } = defineProps<{ feedback: Feedback; isActive?: boolean }>()
 
 const feedbackStore = useFeedbackStore()
+
+function handleItemClick() {
+  emit('selectItem')
+  feedbackStore.setActiveFeedback(feedback)
+}
 </script>
 
 <template>
@@ -17,11 +24,7 @@ const feedbackStore = useFeedbackStore()
       <SuggestionIconSvg v-else-if="feedback.type === FeedbackType.SUGGESTION" />
     </div>
     <div class="grow">
-      <h3
-        class="text-lg cursor-pointer"
-        role="button"
-        @click="feedbackStore.setActiveFeedback(feedback)"
-      >
+      <h3 class="text-lg cursor-pointer" role="button" @click="handleItemClick">
         {{ feedback.title }}
       </h3>
       <div class="flex gap-2 justify-between text-sm text-slate-500">

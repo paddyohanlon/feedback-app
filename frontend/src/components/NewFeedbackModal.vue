@@ -31,14 +31,16 @@ watch(route, (newRoute) => {
 
 onMounted(() => openModal(route.name))
 
-const unsavedFeedback = ref<UnsavedFeedback>({
+const initialUnsavedFeedback = {
   name: '',
   email: '',
   /** Allow empty string here to show default inactive option */
   type: '' as FeedbackType,
   title: '',
   message: '',
-})
+}
+
+const unsavedFeedback = ref<UnsavedFeedback>({ ...initialUnsavedFeedback })
 
 function openModal(routeName: RouteRecordNameGeneric) {
   if (routeName !== 'newFeedback') return
@@ -48,6 +50,7 @@ function openModal(routeName: RouteRecordNameGeneric) {
 }
 
 function closeModal() {
+  unsavedFeedback.value = initialUnsavedFeedback
   modal.value?.close()
   document.removeEventListener('keydown', escapeHandler)
   router.push({ name: 'home' })
@@ -184,7 +187,7 @@ function validateMessage(value: unknown): string | boolean {
           />
           <InputErrorMessage name="message" />
         </FormControl>
-        <div class="flex justify-end gap-3 pt-1">
+        <div class="flex flex-col md:flex-row justify-end gap-3 pt-1">
           <button type="button" @click="closeModal" class="bg-[#eaf0f6] rounded py-2 px-4">
             Discard
           </button>
