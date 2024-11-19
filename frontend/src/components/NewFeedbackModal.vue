@@ -25,6 +25,8 @@ const feedbackStore = useFeedbackStore()
 
 const modal = useTemplateRef('new-feedback-modal')
 
+const isOpen = ref(false)
+
 watch(route, (newRoute) => {
   openModal(newRoute.name)
 })
@@ -45,12 +47,14 @@ const unsavedFeedback = ref<UnsavedFeedback>({ ...initialUnsavedFeedback })
 function openModal(routeName: RouteRecordNameGeneric) {
   if (routeName !== 'newFeedback') return
 
+  isOpen.value = true
   modal.value?.showModal()
   document.addEventListener('keydown', escapeHandler)
 }
 
 function closeModal() {
   unsavedFeedback.value = initialUnsavedFeedback
+  isOpen.value = false
   modal.value?.close()
   document.removeEventListener('keydown', escapeHandler)
   router.push({ name: 'home' })
@@ -123,7 +127,7 @@ function validateMessage(value: unknown): string | boolean {
     >
       <h2 class="text-2xl border-b border-slate-200 py-4 px-8">Add new feedback</h2>
 
-      <Form @submit="handleSubmit" method="dialog" class="py-8 px-8">
+      <Form v-if="isOpen" @submit="handleSubmit" method="dialog" class="py-8 px-8">
         <FormControl>
           <InputLabel for="name">Name</InputLabel>
           <BaseInput
