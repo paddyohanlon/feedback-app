@@ -40,7 +40,9 @@ feedbackStore.fetchInitialData()
         <RouterLink :to="{ name: 'home' }"><LogoSvg /></RouterLink>
       </div>
       <div>
-        <RouterLink class="bg-mint-green text-white rounded py-2 px-4" :to="{ name: 'newFeedback' }"
+        <RouterLink
+          class="bg-mint-green hover:bg-mint-green-dark text-white rounded py-2 px-4 transition-colors"
+          :to="{ name: 'newFeedback' }"
           >New feedback</RouterLink
         >
         <NewFeedbackModal />

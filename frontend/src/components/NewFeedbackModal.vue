@@ -188,10 +188,17 @@ function validateMessage(value: unknown): string | boolean {
           <InputErrorMessage name="message" />
         </FormControl>
         <div class="flex flex-col md:flex-row justify-end gap-3 pt-1">
-          <button type="button" @click="closeModal" class="bg-[#eaf0f6] rounded py-2 px-4">
+          <button
+            type="button"
+            @click="closeModal"
+            class="bg-[#eaf0f6] hover:bg-slate-300 rounded py-2 px-4 transition-colors"
+          >
             Discard
           </button>
-          <button type="submit" class="bg-mint-green text-white rounded py-2 px-4">
+          <button
+            type="submit"
+            class="bg-mint-green hover:bg-mint-green-dark text-white rounded py-2 px-4 transition-colors"
+          >
             Send feedback
           </button>
         </div>

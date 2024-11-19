@@ -6,6 +6,7 @@ export default {
     extend: {
       colors: {
         'mint-green': '#00e29d',
+        'mint-green-dark': '#01c287',
       },
     },
   },
