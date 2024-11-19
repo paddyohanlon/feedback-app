@@ -1,4 +1,5 @@
 import express from 'express'
+import 'express-async-errors'
 import config from 'config'
 import cors from 'cors'
 import feedbackRouter from './routers/feedback'
