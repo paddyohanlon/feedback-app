@@ -4,6 +4,7 @@ import apiClient, { axiosErrorHandler } from '@/services/api-client'
 import {
   FeedbackType,
   type Feedback,
+  type FeedbacksDto,
   type QueryParams,
   type UnsavedFeedback,
 } from '../../../types/common'
@@ -30,9 +31,13 @@ export const useFeedbackStore = defineStore('feedback', () => {
 
   const feedbacks = ref<Feedback[]>([])
 
+  const totalFeedbackDocs = ref(0)
+
   const queryParams = ref<QueryParams>({
     sortBy: 'createdAt',
     sortOrder: 'desc',
+    pageSize: 5,
+    pageNumber: 1,
   })
 
   function setQueryParams(newQueryParams: QueryParams) {
@@ -47,8 +52,8 @@ export const useFeedbackStore = defineStore('feedback', () => {
   // With authentication we'd have the concept of users (with its own endpoints) and would query users
   async function fetchAllNames() {
     try {
-      const { data } = await apiClient.get<Feedback[]>('/feedback')
-      reporterNames.value = [...new Set(data.map((obj) => obj.name))]
+      const { data } = await apiClient.get<FeedbacksDto>('/feedback')
+      reporterNames.value = [...new Set(data.feedbacks.map((obj) => obj.name))]
     } catch (err) {
       console.error(err)
     }
@@ -56,8 +61,9 @@ export const useFeedbackStore = defineStore('feedback', () => {
 
   async function fetchFeedbacks() {
     try {
-      const { data } = await apiClient.get<Feedback[]>('/feedback', { params: queryParams.value })
-      feedbacks.value = data
+      const { data } = await apiClient.get<FeedbacksDto>('/feedback', { params: queryParams.value })
+      feedbacks.value = data.feedbacks
+      totalFeedbackDocs.value = data.totalDocs
       activeFeedback.value = feedbacks.value[0]
     } catch (err) {
       axiosErrorHandler(err)
@@ -83,7 +89,9 @@ export const useFeedbackStore = defineStore('feedback', () => {
   return {
     isLoading,
     activeFeedback,
+    queryParams,
     feedbacks,
+    totalFeedbackDocs,
     reporterNames,
     fetchInitialData,
     setQueryParams,

@@ -36,6 +36,20 @@ npm run dev
 
 The backend will run on `http://localhost:8000`. The frontend will run on `http://localhost:5173/` (if `5173` is available, check the command output to double-check the port)
 
+## Tests
+
+Run backend integration tests:
+
+```bash
+cd backend && npm run test
+```
+
+Run and watch frontend tests:
+
+```bash
+cd frontend && npm run test:unit
+```
+
 ## API Endpoint Sample Curls
 
 ```bash

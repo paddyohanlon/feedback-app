@@ -3,15 +3,16 @@ const { width = '22px' } = defineProps<{ width?: string }>()
 </script>
 
 <template>
-  <svg
-    viewBox="0 0 16 16"
-    xmlns="http://www.w3.org/2000/svg"
-    :style="`width: ${width}`"
-    aria-hidden="true"
-  >
-    <path d="m15.5 4h-15a.5.5 0 0 1 0-1h15a.5.5 0 0 1 0 1z"></path>
-    <path d="m15.5 9h-15a.5.5 0 0 1 0-1h15a.5.5 0 0 1 0 1z"></path>
-    <path d="m15.5 14h-15a.5.5 0 0 1 0-1h15a.5.5 0 0 1 0 1z"></path>
+  <svg :style="`width: ${width}`" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="m5 19.5c0-4.1421 3.35787-7.5 7.5-7.5h75c4.1421 0 7.5 3.3579 7.5 7.5s-3.3579 7.5-7.5 7.5h-75c-4.14214 0-7.5-3.3579-7.5-7.5z"
+    ></path>
+    <path
+      d="m5 49.5c0-4.1421 3.35787-7.5 7.5-7.5h45c4.1421 0 7.5 3.3579 7.5 7.5s-3.3579 7.5-7.5 7.5h-45c-4.14214 0-7.5-3.3579-7.5-7.5z"
+    ></path>
+    <path
+      d="m5 79.5c0-4.1421 3.35787-7.5 7.5-7.5h75c4.1421 0 7.5 3.3579 7.5 7.5s-3.3579 7.5-7.5 7.5h-75c-4.14214 0-7.5-3.3579-7.5-7.5z"
+    ></path>
   </svg>
 </template>
 
