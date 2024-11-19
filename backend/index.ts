@@ -1,20 +1,20 @@
 import express from 'express'
 import config from 'config'
+import cors from 'cors'
 import feedbackRouter from './routers/feedback'
 import { debugApp } from './utils/debugger'
 import { errorHandler } from './middleware/error'
 import db from './db'
 
-const app = express()
-
-// Eventually would probably use: helmet, cors
-// If the API is public, consider abuse (DDOS and spam...)
-
-app.use(express.static('../frontend/dist'))
-
 db()
 
-debugApp(process.env.NODE_ENV)
+const app = express()
+
+// Eventually would probably use: helmet
+// If the API is public, consider abuse (DDOS and spam...)
+
+app.use(cors())
+app.use(express.static('../frontend/dist'))
 
 const apiRouter = express.Router()
 apiRouter.use(express.json())
