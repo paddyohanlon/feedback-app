@@ -7,6 +7,7 @@ import NewFeedbackModal from './components/NewFeedbackModal.vue'
 import { RouterView } from 'vue-router'
 import { ref } from 'vue'
 import HamburgerSvg from './components/HamburgerSvg.vue'
+import LoadingSvg from './components/LoadingSvg.vue'
 
 const feedbackStore = useFeedbackStore()
 
@@ -22,7 +23,7 @@ feedbackStore.fetchInitialData()
 </script>
 
 <template>
-  <div v-if="isLoading">Loading...</div>
+  <div v-if="isLoading" class="grid w-full justify-center items-center h-full"><LoadingSvg /></div>
   <template v-else>
     <header
       class="bg-slate-50 border-b border-slate-200 h-24 p-4 flex gap-4 justify-between items-center sticky top-0"
