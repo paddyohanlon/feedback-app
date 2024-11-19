@@ -11,7 +11,7 @@ import LoadingSvg from './components/LoadingSvg.vue'
 
 const feedbackStore = useFeedbackStore()
 
-const { isLoading, feedbacks, activeFeedback } = storeToRefs(feedbackStore)
+const { isLoading, feedbacks, activeFeedback, reporterNames } = storeToRefs(feedbackStore)
 
 const isSideBarExpanded = ref(false)
 
@@ -20,6 +20,25 @@ function toggleSideBarExpanded(): void {
 }
 
 feedbackStore.fetchInitialData()
+
+type SortOrder = 'asc' | 'desc'
+
+const sortOrder = ref<SortOrder>('desc')
+
+function handleSortChange(event: Event) {
+  // would be nice to show some kind of loading indicator for the list of feedback
+  const select = event.target as HTMLSelectElement
+  sortOrder.value = select.value as SortOrder
+  feedbackStore.setQueryParams({ sortOrder: sortOrder.value })
+}
+
+const nameFilter = ref('')
+
+function handleNameFilterChange(event: Event) {
+  const select = event.target as HTMLSelectElement
+  nameFilter.value = select.value
+  feedbackStore.setQueryParams({ name: nameFilter.value })
+}
 </script>
 
 <template>
@@ -53,7 +72,37 @@ feedbackStore.fetchInitialData()
         class="bg-slate-50 max-sm:w-full sm:w-96 shrink-0 border-r border-slate-200 lg:flex flex-col h-[calc(100vh-24*0.25rem)] overflow-hidden sticky top-[calc(24*0.25rem)]"
         :class="isSideBarExpanded ? 'max-lg:flex max-lg:fixed' : 'max-lg:sr-only'"
       >
-        <div class="p-4 border-b border-slate-200">filtering/sorting</div>
+        <div
+          class="p-4 border-b border-slate-200 flex flex-wrap gap-4 justify-between items-center text-sm text-slate-500"
+        >
+          <div class="flex gap-2 items-center">
+            <label for="filter-by-reporter">Filter</label>
+            <!-- should probably hide the default caret and use the same SVG as SelectInput -->
+            <select
+              :value="nameFilter"
+              @change="(event) => handleNameFilterChange(event)"
+              id="filter-by-reporter"
+              class="bg-slate-200 rounded-sm py-[1px]"
+            >
+              <option default value="">All reporters</option>
+              <option v-for="name in reporterNames" :key="name" :value="name">
+                {{ name.length > 20 ? `${name.slice(0, 20)}...` : name }}
+              </option>
+            </select>
+          </div>
+          <div class="flex gap-2 items-center">
+            <label for="sort-by-date">Sort</label>
+            <select
+              :value="sortOrder"
+              @change="(event) => handleSortChange(event)"
+              id="sort-by-date"
+              class="bg-slate-200 rounded-sm py-[1px]"
+            >
+              <option value="desc">Newest</option>
+              <option value="asc">Oldest</option>
+            </select>
+          </div>
+        </div>
         <div class="p-[5px] relative min-h-px flex-1">
           <div class="overflow-y-auto h-full">
             <h2 class="sr-only">List of feedback</h2>
