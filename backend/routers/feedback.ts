@@ -38,8 +38,9 @@ router.get('/', async (req, res) => {
 
   const { value, error } = queryParamsSchema.validate(req.query, { abortEarly: false })
   if (error) {
-    debugApp(error.details)
-    res.status(400).json({ error: error.details.map((d) => d.message).join('. ') })
+    const errorMessages = error.details.map((d) => d.message).join('. ')
+    debugApp(errorMessages)
+    res.status(400).json({ error: errorMessages })
     return
   }
 
