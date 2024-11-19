@@ -1,7 +1,4 @@
 {
   "PORT": "PORT",
-  "DB_URL": "DB_URL",
-  "NAME_MAX_LENGTH": 50,
-  "EMAIL_MAX_LENGTH": 254,
-  "MESSAGE_MAX_LENGTH": 2000
+  "DB_URL": "DB_URL"
 }

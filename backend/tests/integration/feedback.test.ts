@@ -1,9 +1,9 @@
 import request from 'supertest'
-import config from 'config'
 import { startServer } from '../../index'
 import { Server } from 'net'
 import { FeedbackModel } from '../../models/feedback'
 import { Feedback, FeedbackType, type UnsavedFeedback } from '../../types/common'
+import { NAME_MAX_LENGTH, TITLE_MAX_LENGTH, MESSAGE_MAX_LENGTH } from '../../../constants'
 import mongoose from 'mongoose'
 import db from '../../db'
 
@@ -64,8 +64,7 @@ describe('/api/v1/feedback', () => {
     })
 
     it('should return 400 if `name` query param is invalid', async () => {
-      const maxNameLength = config.get('NAME_MAX_LENGTH') as number
-      const nameOneCharTooLong = new Array(maxNameLength + 2).join('a')
+      const nameOneCharTooLong = new Array(NAME_MAX_LENGTH + 2).join('a')
       const res = await request(server).get(`/api/v1/feedback?name=${nameOneCharTooLong}`)
       expect(res.status).toBe(400)
     })
@@ -154,8 +153,7 @@ describe('/api/v1/feedback', () => {
 
   describe('POST /', () => {
     it('should return 400 if name is too long', async () => {
-      const maxNameLength = config.get('NAME_MAX_LENGTH') as number
-      const nameOneCharTooLong = new Array(maxNameLength + 2).join('a')
+      const nameOneCharTooLong = new Array(NAME_MAX_LENGTH + 2).join('a')
       const res = await request(server).post('/api/v1/feedback').send({
         name: nameOneCharTooLong,
         email: 'michelle@example.com',
@@ -186,8 +184,7 @@ describe('/api/v1/feedback', () => {
       expect(res.status).toBe(400)
     })
     it('should return 400 if message is too long', async () => {
-      const maxMessageLength = config.get('MESSAGE_MAX_LENGTH') as number
-      const messageOneCharTooLong = new Array(maxMessageLength + 2).join('a')
+      const messageOneCharTooLong = new Array(MESSAGE_MAX_LENGTH + 2).join('a')
       const res = await request(server).post('/api/v1/feedback').send({
         name: 'Michelle',
         email: 'michelle@example.com',

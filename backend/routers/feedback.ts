@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import Joi from 'joi'
-import config from 'config'
 import { debugApp } from '../utils/debugger'
 import { FeedbackType, type UnsavedFeedback, type Feedback } from '../types/common'
+import { NAME_MAX_LENGTH, TITLE_MAX_LENGTH, MESSAGE_MAX_LENGTH } from '../../constants'
 import mongoose from 'mongoose'
 import { FeedbackModel } from '../models/feedback'
 
@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
   debugApp('GET feedback')
 
   const queryParamsSchema = Joi.object({
-    name: Joi.string().max(config.get('NAME_MAX_LENGTH')),
+    name: Joi.string().max(NAME_MAX_LENGTH),
     pageNumber: Joi.number().integer().min(1),
     pageSize: Joi.number().integer().min(1),
     sortBy: Joi.string().valid('createdAt'),
@@ -92,13 +92,13 @@ router.post('/', async (req, res) => {
   debugApp('req.body', req.body)
 
   const schema = Joi.object({
-    name: Joi.string().max(config.get('NAME_MAX_LENGTH')).required(),
+    name: Joi.string().max(NAME_MAX_LENGTH).required(),
     email: Joi.string().email().required(),
     type: Joi.string()
       .valid(...Object.values(FeedbackType))
       .required(),
-    title: Joi.string().max(config.get('TITLE_MAX_LENGTH')).required(),
-    message: Joi.string().max(config.get('MESSAGE_MAX_LENGTH')).required()
+    title: Joi.string().max(TITLE_MAX_LENGTH).required(),
+    message: Joi.string().max(MESSAGE_MAX_LENGTH).required()
   })
 
   const { value, error } = schema.validate(req.body, { abortEarly: false })
