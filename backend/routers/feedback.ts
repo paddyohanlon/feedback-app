@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import Joi from 'joi'
 import { debugApp } from '../utils/debugger'
-import { FeedbackType, type UnsavedFeedback, type Feedback } from '../../types/common'
+import { FeedbackType, type UnsavedFeedback, type Feedback, type QueryParams } from '../../types/common'
 import { NAME_MAX_LENGTH, TITLE_MAX_LENGTH, MESSAGE_MAX_LENGTH } from '../../constants'
 import mongoose from 'mongoose'
 import { FeedbackModel } from '../models/feedback'
@@ -42,14 +42,6 @@ router.get('/', async (req, res) => {
     debugApp(errorMessages)
     res.status(400).json({ error: errorMessages })
     return
-  }
-
-  type QueryParams = {
-    name: string
-    pageNumber: number
-    pageSize: number
-    sortBy: string
-    sortOrder: string
   }
 
   const { name, pageNumber, pageSize, sortBy, sortOrder } = value as QueryParams
