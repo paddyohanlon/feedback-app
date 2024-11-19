@@ -2,6 +2,8 @@
 
 The backend expects MongoDB to be running locally on the default port ([Install MongoDB](https://www.mongodb.com/docs/manual/installation/)).
 
+Written in TypeScript, with an Express backend and Vue.js frontend.
+
 Seed sample data:
 
 ```bash
