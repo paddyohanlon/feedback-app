@@ -139,6 +139,14 @@ describe('/api/v1/feedback', () => {
       expect(body[0].name).toBe('Angel')
     })
 
+    it('should allow empty query parameters', async () => {
+      const res = await request(server).get('/api/v1/feedback?name=&pageSize=&pageNumber=&sortBy=&sortOrder=')
+      const body = res.body as Feedback[]
+
+      expect(res.status).toBe(200)
+      expect(body).toHaveLength(4)
+    })
+
     // Test error handling
     it('should return 500 when database query fails', async () => {
       // Force an error by closing the connection

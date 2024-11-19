@@ -29,11 +29,11 @@ router.get('/', async (req, res) => {
   debugApp('GET feedback')
 
   const queryParamsSchema = Joi.object({
-    name: Joi.string().max(NAME_MAX_LENGTH),
-    pageNumber: Joi.number().integer().min(1),
-    pageSize: Joi.number().integer().min(1),
-    sortBy: Joi.string().valid('createdAt'),
-    sortOrder: Joi.string().valid('asc', 'desc')
+    name: Joi.string().max(NAME_MAX_LENGTH).allow(''),
+    pageNumber: Joi.number().integer().min(1).allow(''),
+    pageSize: Joi.number().integer().min(1).allow(''),
+    sortBy: Joi.string().valid('createdAt').allow(''),
+    sortOrder: Joi.string().valid('asc', 'desc').allow('')
   })
 
   const { value, error } = queryParamsSchema.validate(req.query, { abortEarly: false })
