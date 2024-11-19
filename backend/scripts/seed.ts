@@ -13,6 +13,13 @@ const sampleFeedback: UnsavedFeedback[] = [
     message: 'The search filter is not working on mobile devices'
   },
   {
+    name: 'Alice Johnsons Jimmy Jennason Teeling Macarroons',
+    email: 'alice@example.com',
+    type: FeedbackType.BUG,
+    title: 'Mobile Search Filter Issue',
+    message: 'The search filter is not working on mobile devices'
+  },
+  {
     name: 'Bob Smith',
     email: 'bob@example.com',
     type: FeedbackType.SUGGESTION,
@@ -518,6 +525,20 @@ const sampleFeedback: UnsavedFeedback[] = [
     title: 'Photoshop crashes when saving file',
     message:
       'Hi Team,\n\nI encountered a bug in [software/product name] version [version number]. When I try to save a file, the application crashes. Here’s what happens:\n\nI was [describe the activity, e.g., “editing a document”] and clicked on save. Instead of saving, the app crashed immediately.\n\nHere’s how you can reproduce the issue:\n\n\t1.\tOpen [feature or section].\n\t2.\tMake changes.\n\t3.\tClick on the save button.\n\nI expected it to save my work, but instead, it crashes every time.\n\nI’m using [operating system] on [basic hardware info]. If relevant, I’m on [browser name and version].\n\nI’ve attached screenshots and logs that might help.\n\nThanks for looking into this!\n\nBest,'
+  },
+  {
+    name: "Patrick O'Hanlon",
+    email: 'paddy@paddyohanlon.com',
+    type: FeedbackType.BUG,
+    title: 'Illustrator crashes when saving file',
+    message: 'More file saving. What is Adobe up to...'
+  },
+  {
+    name: "Patrick O'Hanlon",
+    email: 'paddy@paddyohanlon.com',
+    type: FeedbackType.SUGGESTION,
+    title: 'Adobe should fix bugs',
+    message: 'You should open source your products'
   }
 ]
 
