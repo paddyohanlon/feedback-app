@@ -485,8 +485,10 @@ const sampleFeedback: UnsavedFeedback[] = [
     name: 'Reed Richards',
     email: 'reed@example.com',
     type: FeedbackType.BUG,
-    title: 'Stretching Physics Error',
-    message: 'Stretching physics broken'
+    title:
+      'User authentication fails intermittently when processing concurrent login requests during high-traffic periods, resulting in session token mismatch and unexpected logouts for approximately',
+    message:
+      'Summary:\nUser authentication fails intermittently when processing concurrent login requests during high-traffic periods, resulting in session token mismatch and unexpected logouts for approximately 15% of users between 9-10am EST.\n\nEnvironment:\n- Production Environment\n- Node.js v18.15.0\n- MongoDB v6.0.4\n- Redis v7.0.8\n- Load Balancer: AWS ELB\n\nSteps to Reproduce:\n1. Monitor system during peak traffic hours (9-10am EST)\n2. Observe authentication attempts across multiple server instances\n3. Track session token generation and validation\n4. Review Redis session storage consistency\n\nExpected Behavior:\n- All concurrent login requests should be processed successfully\n- Session tokens should remain valid throughout user sessions\n- No unexpected logouts should occur\n- Redis session storage should maintain consistency across all instances\n\nActual Behavior:\n- Approximately 15% of users experience authentication failures\n- Session tokens become invalid unexpectedly\n- Users are logged out without warning\n- Redis session storage shows inconsistencies between instances\n- Error logs show race conditions in token generation\n\nTechnical Analysis:\nPreliminary investigation reveals potential race conditions in the session management system. When multiple authentication requests are processed simultaneously across different server instances, the following issues occur:\n\n1. Token Generation Conflicts:\n- Multiple tokens are sometimes generated for the same user\n- Race condition between token generation and session storage\n- Inconsistent session data across Redis instances\n\n2. Load Balancer Impact:\n- Requests are not consistently routed to the same server\n- Sticky sessions are not properly maintained\n- Session affinity is lost during high-traffic periods\n\n3. Database Contention:\n- High number of concurrent writes to user session collection'
   },
   {
     name: 'Sue Storm',
@@ -506,8 +508,16 @@ const sampleFeedback: UnsavedFeedback[] = [
     name: 'Tony Stark',
     email: 'tony@example.com',
     type: FeedbackType.SUGGESTION,
-    title: 'AI Assistant Integration',
+    title: 'AI Assistant Integration maybe lead to long titles',
     message: 'Add AI assistant integration'
+  },
+  {
+    name: "Patrick O'Hanlon",
+    email: 'paddy@paddyohanlon.com',
+    type: FeedbackType.BUG,
+    title: 'Photoshop crashes when saving file',
+    message:
+      'Hi Team,\n\nI encountered a bug in [software/product name] version [version number]. When I try to save a file, the application crashes. Here’s what happens:\n\nI was [describe the activity, e.g., “editing a document”] and clicked on save. Instead of saving, the app crashed immediately.\n\nHere’s how you can reproduce the issue:\n\n\t1.\tOpen [feature or section].\n\t2.\tMake changes.\n\t3.\tClick on the save button.\n\nI expected it to save my work, but instead, it crashes every time.\n\nI’m using [operating system] on [basic hardware info]. If relevant, I’m on [browser name and version].\n\nI’ve attached screenshots and logs that might help.\n\nThanks for looking into this!\n\nBest,'
   }
 ]
 
