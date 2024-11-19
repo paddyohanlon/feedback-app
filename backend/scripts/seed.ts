@@ -529,8 +529,8 @@ async function seed(): Promise<void> {
     }
 
     console.log(`Successfully seeded ${sampleFeedback.length} feedback entries`)
-  } catch (error) {
-    console.error('Error seeding database:', error)
+  } catch (err) {
+    console.error('Error seeding database:', err)
   } finally {
     await mongoose.connection.close()
     console.log('Database connection closed')
