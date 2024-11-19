@@ -9,6 +9,11 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
     },
+    {
+      path: '/feedback/new',
+      name: 'newFeedback',
+      component: HomeView,
+    },
   ],
 })
 
