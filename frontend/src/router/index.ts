@@ -9,6 +9,7 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
     },
+    // Used to display the feedback modal
     {
       path: '/feedback/new',
       name: 'newFeedback',
